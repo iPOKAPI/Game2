@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainQuest</title>
+    <style>
+        body {
+            background: url('background.jpg') no-repeat center center/cover;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #ff69b4;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        input {
+            padding: 10px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #000;
+            margin: 10px;
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .face-id {
+            background: white;
+            border: 2px solid black;
+        }
+        .start {
+            background: red;
+            color: white;
+        }
+        video, canvas {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid black;
+        }
+        .camera-controls {
+            display: none;
+            margin-top: 10px;
+        }
+        .game-map {
+            display: none;
+            background: url('game-map.jpg') no-repeat center center/cover;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        .house {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+        .story-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url('story-background.jpg') no-repeat center center/cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="welcome-screen">
+        <h1>Welcome to BrainQuest</h1>
+        <input type="text" id="name" placeholder="Your Name">
+        <div class="buttons">
+            <button class="face-id" onclick="faceID()">Face ID</button>
+            <button class="start" onclick="startGame()">Start</button>
+        </div>
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+        <div class="camera-controls">
+            <button onclick="capturePhoto()">Capture</button>
+            <button onclick="confirmPhoto()">Confirm</button>
+            <button onclick="cancelPhoto()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="container" id="mechanics-screen" style="display: none;">
+        <h1>MECHANICS</h1>
+        <button class="start" onclick="showGameMap()">Play</button>
+    </div>
+    <div class="game-map" id="game-map">
+        <img src="game-map.jpg" alt="Game Map" style="width:100%; height:100vh;">
+        <img src="house.png" class="house" style="top: 20%; left: 10%;" onclick="showStory()">
+        <img src="house.png" class="house" style="top: 40%; left: 30%;" onclick="showStory()">
+        <img src="house.png" class="house" style="top: 60%; left: 50%;" onclick="showStory()">
+        <img src="house.png" class="house" style="top: 80%; left: 70%;" onclick="showStory()">
+    </div>
+    <div class="container story-screen" id="story-screen">
+        <h1>STORY</h1>
+        <button class="start" onclick="showNextScreen()">Next</button>
+    </div>
+
+    <script>
+        let videoStream;
+
+        function faceID() {
+            const video = document.getElementById("video");
+            const controls = document.querySelector(".camera-controls");
+            video.style.display = "block";
+            controls.style.display = "flex";
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoStream = stream;
+                    video.srcObject = stream;
+                })
+                .catch(error => {
+                    alert("Error accessing camera: " + error);
+                });
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById("video");
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.style.display = "block";
+        }
+
+        function confirmPhoto() {
+            alert("Photo confirmed!");
+            stopCamera();
+        }
+
+        function cancelPhoto() {
+            const canvas = document.getElementById("canvas");
+            canvas.style.display = "none";
+            stopCamera();
+        }
+
+        function stopCamera() {
+            const video = document.getElementById("video");
+            const controls = document.querySelector(".camera-controls");
+            video.style.display = "none";
+            controls.style.display = "none";
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        function startGame() {
+            let name = document.getElementById("name").value;
+            if(name.trim() === "") {
+                alert("Please enter your name!");
+            } else {
+                document.getElementById("welcome-screen").style.display = "none";
+                document.getElementById("mechanics-screen").style.display = "flex";
+            }
+        }
+
+        function showGameMap() {
+            document.getElementById("mechanics-screen").style.display = "none";
+            document.getElementById("game-map").style.display = "block";
+        }
+
+        function startLevel(level) {
+            alert("Starting Level " + level);
+        }
+        function showStory() {
+            document.getElementById("game-map").style.display = "none";
+            document.getElementById("story-screen").style.display = "flex";
+        }
+
+        function showNextScreen() {
+            alert("Proceeding to the next step...");
+        }
+    </script>
+</body>
+</html>

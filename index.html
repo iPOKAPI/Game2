@@ -11,7 +11,6 @@
             padding: 0 ;
         }
         body {
-            background: url('home.gif') no-repeat center center/cover;
             text-align: center;
             font-family: Arial, sans-serif;
         }
@@ -29,8 +28,9 @@
         }
 
         input {
-            position: absolute;
+        position: absolute;
         padding: 10px;
+        z-index: 1;
         font-size: 1.5rem;
         border-radius: 30px;
         border: 2px solid #000;
@@ -40,6 +40,14 @@
         width: 300px; /* Adjust width as needed */
         text-align: center; /* Centers text inside input */
          }
+
+        .video-container {
+            position: relative;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            z-index: 0;
+        }
         .buttons {
             display: flex;
             gap: 20px;
@@ -115,21 +123,30 @@
             height: 100vh;
             background: url('story-background.jpg') no-repeat center center/cover;
         }
+        .background{
+            background: url('home.gif') no-repeat center center/cover;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="background">
     <div class="container" id="welcome-screen">
-        <input type="text" id="name" placeholder="Your Name">
-        <div class="buttons">
-            <button class="face-id" onclick="faceID()"></button>
-            <button class="start" onclick="startGame()">Start</button>
-        </div>
-        <video id="video" autoplay></video>
-        <canvas id="canvas"></canvas>
-        <div class="camera-controls">
-            <button onclick="capturePhoto()">Capture</button>
-            <button onclick="confirmPhoto()">Confirm</button>
-            <button onclick="cancelPhoto()">Cancel</button>
+
+            <input type="text" id="name" placeholder="Your Name">
+            <div class="buttons">
+                <button class="face-id" id="face" onclick="faceID()"></button>
+                <button class="start" onclick="startGame()">Start</button>
+            </div>
+            
+            <div class="video-container">
+                <video id="video" autoplay></video>
+            </div>
+            <canvas id="canvas"></canvas>
+            <div class="camera-controls">
+                <button onclick="captureAndConfirmPhoto()">Capture & Confirm</button>
+                <button onclick="cancelPhoto()">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -157,6 +174,8 @@
             const controls = document.querySelector(".camera-controls");
             video.style.display = "block";
             controls.style.display = "flex";
+            document.getElementById("name").style.display = "none";
+            document.getElementById("face").style.display = "none";
 
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
@@ -167,37 +186,46 @@
                     alert("Error accessing camera: " + error);
                 });
         }
+        function captureAndConfirmPhoto() {
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
 
-        function capturePhoto() {
-            const video = document.getElementById("video");
-            const canvas = document.getElementById("canvas");
-            const context = canvas.getContext("2d");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.style.display = "block";
-        }
+    // Capture photo from video feed
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.style.display = "block";
 
-        function confirmPhoto() {
-            alert("Photo confirmed!");
-            stopCamera();
-        }
+    alert("Photo captured and confirmed!");
 
-        function cancelPhoto() {
-            const canvas = document.getElementById("canvas");
-            canvas.style.display = "none";
-            stopCamera();
-        }
+    // Add a delay before closing (e.g., 2 seconds)
+    setTimeout(() => {
+        stopCamera();
+        canvas.style.display = "none";
+        document.getElementById("name").style.display = "block";
+        document.getElementById("face").style.display = "block";
+    }, 2000); // Delay of 2000ms (2 seconds)
+}
 
-        function stopCamera() {
-            const video = document.getElementById("video");
-            const controls = document.querySelector(".camera-controls");
-            video.style.display = "none";
-            controls.style.display = "none";
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-            }
-        }
+function cancelPhoto() {
+    const canvas = document.getElementById("canvas");
+    canvas.style.display = "none";
+    document.getElementById("name").style.display = "block";
+    document.getElementById("face").style.display = "block";
+    stopCamera();
+}
+
+function stopCamera() {
+    const video = document.getElementById("video");
+    const controls = document.querySelector(".camera-controls");
+    video.style.display = "none";
+    controls.style.display = "none";
+    if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+    }
+}
+
 
         function startGame() {
             let name = document.getElementById("name").value;

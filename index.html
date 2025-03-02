@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainQuest</title>
     <style>
+        *{
+            overflow: hidden;
+            margin: 0;
+            padding: 0 ;
+        }
         body {
-            background: url('background.jpg') no-repeat center center/cover;
+            background: url('home.gif') no-repeat center center/cover;
             text-align: center;
             font-family: Arial, sans-serif;
         }
@@ -22,13 +27,19 @@
             color: #ff69b4;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
+
         input {
-            padding: 10px;
-            font-size: 1.5rem;
-            border-radius: 10px;
-            border: 2px solid #000;
-            margin: 10px;
-        }
+            position: absolute;
+        padding: 10px;
+        font-size: 1.5rem;
+        border-radius: 30px;
+        border: 2px solid #000;
+        margin: 10px;
+        height: 60px;
+        background: #ffecad;
+        width: 300px; /* Adjust width as needed */
+        text-align: center; /* Centers text inside input */
+         }
         .buttons {
             display: flex;
             gap: 20px;
@@ -41,12 +52,37 @@
             cursor: pointer;
         }
         .face-id {
+            position: absolute;
+            right: 44%;
+            bottom: 15%;
+            width: 150px; /* Same as height */
+            height: 150px;
             background: white;
             border: 2px solid black;
+            background-image: url(face.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            border-radius: 50%; /* Ensures a perfect circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Prevents any content from overflowing */
         }
+        .face-id img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+
         .start {
             background: red;
             color: white;
+            position: absolute;
+            right: 2%;
+            bottom: 100px;
         }
         video, canvas {
             display: none;
@@ -83,10 +119,9 @@
 </head>
 <body>
     <div class="container" id="welcome-screen">
-        <h1>Welcome to BrainQuest</h1>
         <input type="text" id="name" placeholder="Your Name">
         <div class="buttons">
-            <button class="face-id" onclick="faceID()">Face ID</button>
+            <button class="face-id" onclick="faceID()"></button>
             <button class="start" onclick="startGame()">Start</button>
         </div>
         <video id="video" autoplay></video>

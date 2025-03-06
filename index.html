@@ -4,255 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainQuest</title>
-    <style>
-        *{
-            overflow: hidden;
-            margin: 0;
-            padding: 0 ;
-        }
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        h1 {
-            font-size: 3rem;
-            color: #ff69b4;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-        }
-
-        input {
-        position: absolute;
-        padding: 10px;
-        z-index: 1;
-        font-size: 1.5rem;
-        border-radius: 30px;
-        border: 2px solid #000;
-        margin: 10px;
-        height: 60px;
-        background: #ffecad;
-        width: 300px; /* Adjust width as needed */
-        text-align: center; /* Centers text inside input */
-         }
-
-        .video-container {
-            position: relative;
-            background: white;
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 0;
-        }
-        .buttons {
-            display: flex;
-            gap: 20px;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .face-id {
-            position: absolute;
-            right: 44%;
-            bottom: 15%;
-            width: 150px; /* Same as height */
-            height: 150px;
-            background: white;
-            border: 2px solid black;
-            background-image: url(face.png);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            border-radius: 50%; /* Ensures a perfect circle */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* Prevents any content from overflowing */
-        }
-        .face-id img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-
-        .start {
-            background: red;
-            color: white;
-            position: absolute;
-            right: 2%;
-            bottom: 100px;
-        }
-        video, canvas {
-            display: none;
-            width: 100%;
-            max-width: 400px;
-            border: 2px solid black;
-        }
-        .camera-controls {
-            display: none;
-            margin-top: 10px;
-        }
-        .game-map {
-            display: none;
-            background: url('game-map.jpg') no-repeat center center/cover;
-            width: 100%;
-            height: 100vh;
-            position: relative;
-        }
-        .house {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-        }
-        .story-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: url('story-background.jpg') no-repeat center center/cover;
-        }
-        .background{
-            background: url('home.gif') no-repeat center center/cover;
-            padding: 10px;
-        }
-    </style>
 </head>
-<body>
-    <div class="background">
-    <div class="container" id="welcome-screen">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
 
-            <input type="text" id="name" placeholder="Your Name">
-            <div class="buttons">
-                <button class="face-id" id="face" onclick="faceID()"></button>
-                <button class="start" onclick="startGame()">Start</button>
-            </div>
-            
-            <div class="video-container">
-                <video id="video" autoplay></video>
-            </div>
-            <canvas id="canvas"></canvas>
-            <div class="camera-controls">
-                <button onclick="captureAndConfirmPhoto()">Capture & Confirm</button>
-                <button onclick="cancelPhoto()">Cancel</button>
-            </div>
+.container {
+    display: none;
+    padding: 20px;
+}
+
+.active {
+    display: block;
+}
+
+.map-container {
+    width: 70%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    height: 500px;
+    position: relative;
+    border: 2px solid #000;
+    background: url('map.gif') no-repeat center center;
+    background-size: contain;
+}
+
+.house {
+    width: 50px;
+    height: 50px;
+    background-color: #ffcc00;
+    margin: 10px;
+    display: inline-block;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 5px;
+}
+
+.house.locked {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+#leaderboard {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+</style>
+<body>
+    <div id="welcome" class="container active">
+        <h1>Welcome to BrainQuest</h1>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <div id="camera-container">
+            <video id="camera" style="display:none;" autoplay></video>
+            <button onclick="startCamera()">Start Camera</button>
+            <button onclick="captureFaceID()">Capture Face ID</button>
+        </div>
+        <button onclick="nextPage('mechanics')">Start</button>
+    </div>
+
+
+    <div id="mechanics" class="container">
+        <h1>Game Mechanics</h1>
+        <p>Answer the questions in each house to proceed to the next one.</p>
+        <button onclick="nextPage('map')">Play</button>
+    </div>
+
+    <div id="map" class="container">
+        <h1>Game Map</h1>
+        <div class="map-container">
+            <div class="house" id="house1" onclick="startHouse(1)">1</div>
+            <div class="house locked" id="house2" onclick="startHouse(2)">2</div>
+            <div class="house locked" id="house3" onclick="startHouse(3)">3</div>
+            <div class="house locked" id="house4" onclick="startHouse(4)">4</div>
+            <!-- Add up to 25 houses -->
+        </div>
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol id="leaderboard-list"></ol>
         </div>
     </div>
-
-    <div class="container" id="mechanics-screen" style="display: none;">
-        <h1>MECHANICS</h1>
-        <button class="start" onclick="showGameMap()">Play</button>
-    </div>
-    <div class="game-map" id="game-map">
-        <img src="game-map.jpg" alt="Game Map" style="width:100%; height:100vh;">
-        <img src="house.png" class="house" style="top: 20%; left: 10%;" onclick="showStory()">
-        <img src="house.png" class="house" style="top: 40%; left: 30%;" onclick="showStory()">
-        <img src="house.png" class="house" style="top: 60%; left: 50%;" onclick="showStory()">
-        <img src="house.png" class="house" style="top: 80%; left: 70%;" onclick="showStory()">
-    </div>
-    <div class="container story-screen" id="story-screen">
-        <h1>STORY</h1>
-        <button class="start" onclick="showNextScreen()">Next</button>
-    </div>
-
+    
     <script>
-        let videoStream;
+   let leaderboard = [];
 
-        function faceID() {
-            const video = document.getElementById("video");
-            const controls = document.querySelector(".camera-controls");
-            video.style.display = "block";
-            controls.style.display = "flex";
-            document.getElementById("name").style.display = "none";
-            document.getElementById("face").style.display = "none";
-
+function startCamera() {
+            const video = document.getElementById("camera");
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
-                    videoStream = stream;
                     video.srcObject = stream;
+                    video.style.display = "block";
                 })
                 .catch(error => {
-                    alert("Error accessing camera: " + error);
+                    alert("Failed to access camera. Please allow camera permissions.");
                 });
         }
-        function captureAndConfirmPhoto() {
-    const video = document.getElementById("video");
-    const canvas = document.getElementById("canvas");
-    const context = canvas.getContext("2d");
 
-    // Capture photo from video feed
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = "block";
+        function captureFaceID() {
+            const video = document.getElementById("camera");
+            if (!video.srcObject) {
+                alert("Start the camera first!");
+                return;
+            }
+            alert("Face ID Captured! Proceeding...");
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.style.display = "none";
+        }
 
-    alert("Photo captured and confirmed!");
 
-    // Add a delay before closing (e.g., 2 seconds)
-    setTimeout(() => {
-        stopCamera();
-        canvas.style.display = "none";
-        document.getElementById("name").style.display = "block";
-        document.getElementById("face").style.display = "block";
-    }, 2000); // Delay of 2000ms (2 seconds)
+        function nextPage(page) {
+    document.querySelectorAll('.container').forEach(div => div.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
 }
 
-function cancelPhoto() {
-    const canvas = document.getElementById("canvas");
-    canvas.style.display = "none";
-    document.getElementById("name").style.display = "block";
-    document.getElementById("face").style.display = "block";
-    stopCamera();
-}
-
-function stopCamera() {
-    const video = document.getElementById("video");
-    const controls = document.querySelector(".camera-controls");
-    video.style.display = "none";
-    controls.style.display = "none";
-    if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
+function startHouse(house) {
+    if (document.getElementById(`house${house}`).classList.contains('locked')) {
+        alert('This house is locked!');
+        return;
+    }
+    
+    let answer = prompt(`Answer the question for House ${house}: What is 2 + 2?`);
+    if (answer == 4) {
+        alert('Correct! Proceeding to the next house.');
+        unlockHouse(house + 1);
+        updateLeaderboard();
+    } else {
+        alert('Wrong answer! Try again.');
     }
 }
 
+function unlockHouse(house) {
+    let nextHouse = document.getElementById(`house${house}`);
+    if (nextHouse) {
+        nextHouse.classList.remove('locked');
+    }
+}
 
-        function startGame() {
-            let name = document.getElementById("name").value;
-            if(name.trim() === "") {
-                alert("Please enter your name!");
-            } else {
-                document.getElementById("welcome-screen").style.display = "none";
-                document.getElementById("mechanics-screen").style.display = "flex";
-            }
-        }
+function updateLeaderboard() {
+    const playerName = document.getElementById("playerName").value || "Player";
+    
+    // Count only answered houses (excluding the locked ones)
+    let progress = document.querySelectorAll(".house:not(.locked)").length - 1; 
 
-        function showGameMap() {
-            document.getElementById("mechanics-screen").style.display = "none";
-            document.getElementById("game-map").style.display = "block";
-        }
-
-        function startLevel(level) {
-            alert("Starting Level " + level);
-        }
-        function showStory() {
-            document.getElementById("game-map").style.display = "none";
-            document.getElementById("story-screen").style.display = "flex";
-        }
-
-        function showNextScreen() {
-            alert("Proceeding to the next step...");
-        }
+    let existingPlayer = leaderboard.find(player => player.name === playerName);
+    if (existingPlayer) {
+        existingPlayer.progress = progress;
+    } else {
+        leaderboard.push({ name: playerName, progress });
+    }
+    
+    // Sort leaderboard (highest progress first)
+    leaderboard.sort((a, b) => b.progress - a.progress);
+    
+    // Update leaderboard UI
+    const leaderboardList = document.getElementById("leaderboard-list");
+    leaderboardList.innerHTML = "";
+    leaderboard.forEach(player => {
+        let listItem = document.createElement("li");
+        listItem.textContent = `${player.name}: ${player.progress} houses`;
+        leaderboardList.appendChild(listItem);
+    });
+}
     </script>
 </body>
 </html>

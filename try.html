@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainQuest</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url(Assets/background.gif) no-repeat center center/cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            position: relative;
+        }
+        .title {
+            font-size: 50px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .name-input {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 20px;
+            border: none;
+            text-align: center;
+            outline: none;
+        }
+        .face-id {
+            display: block;
+            margin: 20px auto;
+            width: 50px;
+            cursor: pointer;
+        }
+        .start-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .start-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">WELCOME TO <br> BRAINQUEST</div>
+        <input type="text" class="name-input" placeholder="Your Name">
+        <img src="face-id.png" alt="Face ID" class="face-id">
+        <button class="start-btn">START</button>
+    </div>
+</body>
+</html>

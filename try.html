@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>Draggable Map with Fixed Leaderboard</title>
+  <title>Draggable Fixed Background Map</title>
   <style>
     * {
       margin: 0;
@@ -15,10 +14,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: Arial, sans-serif;
     }
 
-    /* Map takes full space */
     .map-container {
       width: 100%;
       height: 100%;
@@ -35,24 +32,25 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 1152px; /* Map image width */
-      height: 648px; /* Map image height */
+      width: 1152px; /* Width of your uploaded image */
+      height: 648px; /* Height of your uploaded image */
       background: url(Assets/map.gif) no-repeat center center;
       background-size: cover;
-      transition: transform 0.1s ease-out;
+      transition: transform 0.2s ease-out;
     }
 
+    /* Example clickable area (the 'Start' position) */
     .clickable {
       position: absolute;
-      top: 500px;
-      left: 50px;
+      top: 500px; /* Adjust based on position */
+      left: 50px; /* Adjust based on position */
       width: 100px;
       height: 80px;
-      background: rgba(255, 255, 255, 0);
+      background: rgba(255, 255, 255, 0); /* Transparent but clickable */
       cursor: pointer;
     }
 
-    /* Modal */
+    /* Modal for content */
     .content-modal {
       position: fixed;
       top: 50%;
@@ -63,7 +61,7 @@
       border: 2px solid #333;
       display: none;
       z-index: 10;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
 
     .overlay {
@@ -86,73 +84,76 @@
       cursor: pointer;
     }
 
-    /* Fixed Leaderboard Overlay */
-    .leaderboard {
-      width: 250px;
-      height: 100vh;
-      position: fixed;
-      right: 0;
-      top: 0;
-      background: rgba(255, 255, 255, 0.95);
-      border-left: 2px solid #ccc;
-      padding: 20px;
-      overflow-y: auto;
-      z-index: 15;
-    }
-
-    .leaderboard h3 {
-      margin-bottom: 10px;
-      text-align: center;
-      font-size: 22px;
-      color: #333;
-    }
-
-    .leaderboard ol {
-      padding-left: 20px;
-    }
-
-    .leaderboard li {
-      margin-bottom: 8px;
-      font-size: 18px;
-      color: #555;
-    }
   </style>
 </head>
-
 <body>
 
-  <!-- Map Section -->
-  <div class="map-container" id="mapContainer">
-    <div class="map" id="map">
-      <div class="clickable" id="startArea" title="Click to Start"></div>
-    </div>
+<div class="map-container" id="mapContainer">
+  <div class="map" id="map">
+    <div class="clickable" id="startArea" title="Click to Start"></div>
   </div>
+</div>
 
-  <!-- Leaderboard Section -->
-  <div class="leaderboard">
-    <h3>Leaderboard</h3>
-    <ol>
-      <li>Player 1 - 50 pts</li>
-      <li>Player 2 - 40 pts</li>
-      <li>Player 3 - 30 pts</li>
-      <li>Player 4 - 20 pts</li>
-      <li>Player 5 - 10 pts</li>
-    </ol>
-  </div>
+<!-- Modal -->
+<div class="overlay" id="overlay"></div>
+<div class="content-modal" id="contentModal">
+  <h2>Welcome</h2>
+  <p>You clicked the Start area!</p>
+  <button class="close-btn" onclick="closeModal()">Close</button>
+</div>
 
-  <!-- Modal -->
-  <div class="overlay" id="overlay"></div>
-  <div class="content-modal" id="contentModal">
-    <h2>Welcome</h2>
-    <p>You clicked the Start area!</p>
-    <button class="close-btn" onclick="closeModal()">Close</button>
-  </div>
+<script>
+  // Dragging functionality
+  const mapContainer = document.getElementById('mapContainer');
+  const map = document.getElementById('map');
+  let isDragging = false;
+  let startX, startY, initialX = 0, initialY = 0;
 
-  <!-- JS Script -->
-  <script>
-   
-  </script>
+  mapContainer.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const transform = map.style.transform.match(/translate\((-?\d+)px, (-?\d+)px\)/);
+    if (transform) {
+      initialX = parseInt(transform[1]);
+      initialY = parseInt(transform[2]);
+    }
+    mapContainer.classList.add('dragging');
+  });
+
+  mapContainer.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    map.style.transform = `translate(${initialX + dx}px, ${initialY + dy}px)`;
+  });
+
+  mapContainer.addEventListener('mouseup', () => {
+    isDragging = false;
+    mapContainer.classList.remove('dragging');
+  });
+
+  mapContainer.addEventListener('mouseleave', () => {
+    isDragging = false;
+    mapContainer.classList.remove('dragging');
+  });
+
+  // Modal functionality
+  const startArea = document.getElementById('startArea');
+  const overlay = document.getElementById('overlay');
+  const modal = document.getElementById('contentModal');
+
+  startArea.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent drag trigger on click
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  });
+
+  function closeModal() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+  }
+</script>
 
 </body>
-
 </html>

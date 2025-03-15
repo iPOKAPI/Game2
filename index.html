@@ -331,31 +331,24 @@
         font-size: 2rem;
     }
 }
-
-
-
             .story-container {
                 position: absolute;
-                top: 55%;
+                top: 60%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 font-size: 18px;
                 line-height: 1.8;
                 color: #333;
                 background: rgba(255, 255, 255, 0.3); /* Soft white with transparency */
-                padding: 30px 40px;
+                padding: 20px 30px;
                 border-radius: 20px;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-                width: 600px; /* Fixed width */
+                width: 800px; /* Fixed width */
                 max-width: 90%; /* Responsive for small screens */
                 backdrop-filter: blur(10px); /* Frosted glass effect */
                 text-align: center;
         }
 
-            .story-container h2 {
-                font-size: 24px;
-                color: #333;
-            }
 
             .story-container p {
                 font-size: 18px;
@@ -481,7 +474,7 @@
     <div class="welcome-message">WELCOME TO <br>BRAINQUEST!</div>
     <input type="text" id="playerName" placeholder="Enter your name">
     <img src="face.png" alt="Face ID" class="face" onclick="openCamera()">
-    <button onclick="nextPage('mechanics')" class="start-btn">Start</button>
+    <button onclick="validateAndProceed()" class="start-btn">Start</button>
   </div>
 
   <!-- Camera Overlay -->
@@ -530,26 +523,7 @@
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <!--Easy house 2-->
-                <div class="house" id="house2" onclick="startHouse(1)">
-                    <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                <div class="house" id="ehouse1" onclick="startHouse(2)">
-                    <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                <div class="house" id="ehouse2" onclick="startHouse(3)">
-                    <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                <div class="house" id="ehouse3" onclick="startHouse(4)">
-                    <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                <div class="house" id="ehouse4" onclick="startHouse(5)">
-                    <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                <div class="house" id="ehouse5" onclick="startHouse(6)">
-                    <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
-                </div>
-                                <!--Easy house 2-->
-                <div class="house" id="house2" onclick="startHouse(1)">
+                <div class="house" id="house2" onclick="startHouse(2)">
                     <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <div class="house" id="ehouse1" onclick="startHouse(2)">
@@ -568,7 +542,7 @@
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                  <!--Medium house 1-->
-                <div class="house" id="house3" onclick="startHouse(1)">
+                <div class="house" id="house3" onclick="startHouse(3)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <div class="house" id="medhouse1" onclick="startHouse(2)">
@@ -587,7 +561,7 @@
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div> 
                 <!--Medium house 2-->
-                <div class="house" id="house4" onclick="startHouse(1)">
+                <div class="house" id="house4" onclick="startHouse(4)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <div class="house" id="mediumhouse1" onclick="startHouse(2)">
@@ -606,7 +580,7 @@
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>    
                     <!--hard house-->
-                <div class="house" id="house5" onclick="startHouse(1)">
+                <div class="house" id="house5" onclick="startHouse(5)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <div class="house" id="hardhouse1" onclick="startHouse(2)">
@@ -637,24 +611,61 @@
         <div id="leaderboard">
             <h2>Leaderboard</h2>
             <ol id="leaderboard-list">
-                <li>Player 1 - 500 pts</li>
-                <li>Player 2 - 400 pts</li>
-                <li>Player 3 - 300 pts</li>
+                <!-- Player entries will be dynamically arranged here -->
+                <li data-points="400">Player 2 - 400 pts</li>
+                <li data-points="300">Player 3 - 300 pts</li>
             </ol>
         </div>
+        
     </div>
 </div>
 
 <!-- PAGE 4: Story and Questions -->
 <div id="story" class="container">
-    <h1 class="welcome-message" style="position: absolute; top: 0%;">Story</h1>
+    <h1 class="welcome-message" style="position: absolute; top: -5%;">Story</h1>
     <div class="story-container">
         <div id="story-content"></div>
         <div id="question-content"></div>
+        
     </div>
 </div>
 
     <script>
+        
+        let playerNameGlobal = ''; // Global to store player name
+let playerPoints = 0; // Default starting points
+
+function validateAndProceed() {
+    const playerNameInput = document.getElementById('playerName');
+    const playerName = playerNameInput.value.trim(); // Get and trim name
+
+    if (playerName === "") {
+        alert("Please enter your name to proceed."); // Stop if blank
+        return;
+    }
+
+    playerNameGlobal = playerName; // Save globally
+
+    const leaderboardList = document.getElementById('leaderboard-list');
+
+    // Check if player already added to prevent duplicates
+    let existingEntry = document.getElementById('player-entry');
+    if (!existingEntry) {
+        // Add player as a new entry
+        const newPlayerEntry = document.createElement('li');
+        newPlayerEntry.id = 'player-entry';
+        newPlayerEntry.dataset.points = playerPoints; // Set starting points
+        newPlayerEntry.innerText = `${playerName} - ${playerPoints} pts`;
+
+        leaderboardList.appendChild(newPlayerEntry);
+    }
+
+    sortLeaderboard(); // Sort leaderboard after adding player
+
+    // Move to next page
+    nextPage('mechanics');
+}
+
 function nextPage(pageId) {
     // Hide all containers
     const containers = document.querySelectorAll('.container');
@@ -662,6 +673,30 @@ function nextPage(pageId) {
 
     // Show selected page
     document.getElementById(pageId).classList.add('active');
+}
+
+function sortLeaderboard() {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    const players = Array.from(leaderboardList.querySelectorAll('li'));
+
+    // Sort descending by data-points
+    players.sort((a, b) => parseInt(b.dataset.points) - parseInt(a.dataset.points));
+
+    // Append sorted elements back to list
+    leaderboardList.innerHTML = '';
+    players.forEach(player => leaderboardList.appendChild(player));
+}
+
+// Example function to update player points and re-sort
+function updatePlayerPoints(pointsToAdd) {
+    playerPoints += pointsToAdd; // Increase player's points
+
+    const playerEntry = document.getElementById('player-entry');
+    if (playerEntry) {
+        playerEntry.dataset.points = playerPoints; // Update data attribute
+        playerEntry.innerText = `${playerNameGlobal} - ${playerPoints} pts`; // Update display
+        sortLeaderboard(); // Re-sort leaderboard
+    }
 }
 
 
@@ -752,16 +787,27 @@ let stories = {
         <p>As the sun began to set, she smiled, knowing she would return again tomorrow to her favorite place.</p>
         <button onclick="startQuestions(1)">Start Questions</button>`,
 
-    2: `<h2>The Secret Garden</h2>
-        <p>Elena discovered a hidden garden filled with magical flowers...</p>
+    2: `<h2>The Brave Little Squirrel</h2>
+        <p>Once upon a time, in a lush, green forest, there lived a little squirrel named Sammy. Sammy wasn’t the biggest or the fastest squirrel, but he had something special—courage. One bright morning, a terrible storm cloud appeared, darkening the sky and sending a chilly wind across the forest. All the animals scurried to their homes, afraid of the heavy rain and loud thunder.</p>
+        <p>But Sammy, instead of hiding like the others, decided to face the storm. "I may be small," he said to himself, "but I’m brave enough to help!" Sammy ran to the tallest oak tree, where a family of birds had made their nest. The wind was blowing so hard that the nest was shaking, and the baby birds were in danger of falling.</p>
+        <p>Without thinking twice, Sammy climbed the tree, holding onto the branches like a rock climber gripping the cliffside. He carefully gathered the baby birds, one by one, and carried them safely to a lower, stronger branch. As the storm raged on, Sammy kept watch over the little birds, making sure they were safe.</p>
+        <p>When the storm finally passed and the sun came out, the other animals came out of their shelters. They looked at Sammy with wide eyes. "How did you do it?" asked a curious rabbit. Sammy smiled and replied, "It’s not about being the biggest or the fastest; it’s about having the courage to do what’s right, even when it’s hard."</p>
+        <p>From that day on, Sammy became a hero in the forest. All the animals learned that bravery isn't about size or strength—it's about having the heart to help others, no matter the challenge.</p>
         <button onclick="startQuestions(2)">Start Questions</button>`,
 
-    3: `<h2>The Talking River</h2>
-        <p>One day, Elena sat by the river and heard whispers from the water...</p>
+    3: `<h2>The Mysterious Stranger</h2>
+        <p>One cold, windy evening in the quiet village of Ravenswood, 12-year-old Emma spotted a mysterious person walking down the cobblestone road. The stranger wore a long cloak and carried a glowing lantern, which made Emma very curious since visitors hardly ever came to her village. She decided to follow them and watched as they entered the spooky, abandoned inn at the edge of town. Gathering all her courage, Emma peeked inside and saw the stranger looking at an old map. When they noticed her, the stranger introduced themselves as Elias and explained they were searching for something special—a magical gem called the Starstone that had been lost long ago.</p>
+        <p>Excited to be part of an adventure, Emma offered to help. Together, they searched every corner of the dusty inn until Emma spotted a strange stone in the fireplace with odd markings on it. With Elias’s help, they pulled the stone loose and found a hidden compartment holding a glowing blue gem—the Starstone! Elias smiled and thanked Emma for being so brave and clever. They promised to keep the gem safe from harm and gave her a shiny silver coin as a gift to remember their adventure. As the sun rose over Ravenswood, Elias disappeared down the road, leaving Emma with a wonderful story to tell and the memory of an exciting night she would never forget.</p>
         <button onclick="startQuestions(3)">Start Questions</button>`,
 
-    4: `<h2>The Lost Treasure</h2>
-        <p>Elena stumbled upon an old map that led to an ancient treasure chest...</p>
+    4: `<h2>The Mystery of the Missing Trophy</h2>
+        <p>The annual school quiz bee had just ended, and Mr. Cruz proudly held up the gleaming gold trophy. "This will stay in the display case for everyone to see," he announced. The students cheered, especially Ben, Mia, and Carlo, who were the top three finalists. After the event, the three students stayed behind for different reasons. Ben returned to the room to get his forgotten notebook, Mia searched for her lost bracelet, and Carlo was tasked with cleaning up the quiz materials. Everything seemed normal until the next morning when the principal discovered that the trophy was missing. With no signs of a break-in, suspicion fell on the last three students seen near the display case. The principal called them to her office to help solve the mystery.</p>
+        <p>During the investigation, strange clues began to surface. Mia noticed a smear of shiny gold paint on a desk near the door. Carlo remembered hearing a loud clink as he left the room, but he didn’t think much of it at the time. Meanwhile, Ben, known for being forgetful, couldn’t recall if he locked the door after retrieving his notebook. The principal carefully questioned each student, trying to piece together the truth. Who could have taken the trophy, and why? With the clock ticking, it was up to the principal to use the clues and find the missing prize before the school day ended.</p>
+        <button onclick="startQuestions(4)">Start Questions</button>`,
+
+    5: `<h2>The Broken Bracelet</h2>
+        <p>Ella and Mia had been best friends since first grade. They did everything together eating lunch, working on projects, and playing after school. One day, Ella gave Mia a beautiful friendship bracelet with their initials on it. "This means we'll always be friends," Ella said with a smile. Mia promised to wear it every day. But a week later, during recess, Ella noticed Mia wasn’t wearing the bracelet. When she asked about it, Mia looked nervous and said, "I lost it... I’m really sorry." Ella felt hurt and wondered if their friendship still mattered to Mia.</p>
+        <p>The next day, Ella stopped talking to Mia, thinking her friend didn’t care anymore. Mia felt sad but didn’t know how to fix things. After school, while cleaning her backpack, Mia found the bracelet tucked inside a hidden pocket. She ran to Ella’s house and held it up. "I found it! I never stopped caring—I was just scared you'd be mad," Mia said. Ella smiled and hugged her. "I’m sorry for getting upset. Our friendship is more important than a bracelet," she said. From that day on, they learned that honest communication and understanding could make their friendship even stronger.</p>
         <button onclick="startQuestions(4)">Start Questions</button>`
 };
 

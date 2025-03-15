@@ -672,11 +672,11 @@ function goBackToMap() {
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
 
-
         let playerNameGlobal = "";
-        let leaderboard = [];
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || []; // Load leaderboard from localStorage
 
-        function validateAndProceed() {
+        // Function to validate name and proceed
+function validateAndProceed() {
     const playerNameInput = document.getElementById('playerName');
     const playerName = playerNameInput.value.trim();
 
@@ -691,27 +691,40 @@ function goBackToMap() {
     let existingPlayer = leaderboard.find(player => player.name === playerName);
     if (!existingPlayer) {
         leaderboard.push({ name: playerName, points: 0 }); // Initialize at 0 pts
+        saveLeaderboard(); // Save to localStorage
     }
 
     updateLeaderboardUI(); // Show leaderboard
     nextPage('mechanics'); // Proceed to next screen
 }
-
+// Function to add points when answer is correct
 function addPointsForCorrectAnswer() {
-    let player = leaderboard.find(p => p.name === playerNameGlobal);
-    if (player) {
-        player.points += 2; // Add 2 points per correct answer
-    } else {
-        leaderboard.push({ name: playerNameGlobal, points: 2 }); // If somehow not added, add now
-    }
-
-    // Sort leaderboard by points descending
-    leaderboard.sort((a, b) => b.points - a.points);
-
-    // Update UI
-    updateLeaderboardUI();
+    addPoints(2); // Add 2 points per correct answer
 }
 
+// General function to add points
+function addPoints(points) {
+    let player = leaderboard.find(p => p.name === playerNameGlobal);
+    if (player) {
+        player.points += points;
+    } else {
+        leaderboard.push({ name: playerNameGlobal, points: points }); // If somehow missing
+    }
+
+    leaderboard.sort((a, b) => b.points - a.points); // Sort leaderboard
+    saveLeaderboard(); // Save updates to localStorage
+    updateLeaderboardUI(); // Refresh display
+}
+function removePlayerByName(nameToRemove) {
+    // Filter out the player to be removed
+    leaderboard = leaderboard.filter(player => player.name !== nameToRemove);
+
+    // Save updated leaderboard to localStorage
+    saveLeaderboard();
+
+    // Refresh the leaderboard display
+    updateLeaderboardUI();
+}
 
 function nextPage(pageId) {
     // Hide all containers
@@ -722,18 +735,8 @@ function nextPage(pageId) {
     document.getElementById(pageId).classList.add('active');
 }
 
-function sortLeaderboard() {
-    const leaderboardList = document.getElementById('leaderboard-list');
-    const players = Array.from(leaderboardList.querySelectorAll('li'));
 
-    // Sort descending by data-points
-    players.sort((a, b) => parseInt(b.dataset.points) - parseInt(a.dataset.points));
-
-    // Append sorted elements back to list
-    leaderboardList.innerHTML = '';
-    players.forEach(player => leaderboardList.appendChild(player));
-}
-
+// Function to update the leaderboard UI
 function updateLeaderboardUI() {
     const leaderboardList = document.getElementById('leaderboard-list');
     leaderboardList.innerHTML = ''; // Clear current list
@@ -744,6 +747,22 @@ function updateLeaderboardUI() {
         leaderboardList.appendChild(listItem);
     });
 }
+// Save leaderboard to localStorage
+function saveLeaderboard() {
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+}
+// Optional: If you want to sort leaderboard UI elements (but not recommended because JS sort already does this)
+function sortLeaderboard() {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    const players = Array.from(leaderboardList.querySelectorAll('li'));
+
+    // Sort descending by data-points (if you are using data-points attribute)
+    players.sort((a, b) => parseInt(b.dataset.points) - parseInt(a.dataset.points));
+
+    leaderboardList.innerHTML = ''; // Clear list
+    players.forEach(player => leaderboardList.appendChild(player)); // Append sorted
+}
+window.onload = updateLeaderboardUI;
 
 
 

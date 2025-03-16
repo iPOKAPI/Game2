@@ -669,8 +669,15 @@ option:active {
      <div class="main-container">
         <!-- Game Map -->
             <div class="map-container">
-              
-      <button id="musicToggle" style="position: absolute; bottom: 10px; right: 10px;" onclick="toggleMusic()">🎵</button>
+                <button class="menu-button" onclick="toggleMenu()" style="position: absolute; bottom: 10px; right: 10px;">☰</button>
+
+                <!-- Popup Menu (Hidden by Default) -->
+                <div class="popup-menu" id="popupMenu">
+                    <button onclick="goHome()">🏠 Home</button>
+                    <button onclick="goBackToMap()">🗺️ Back to Map</button>
+                    <button id="musicToggle" onclick="toggleMusic()">🎵 Toggle Music</button>
+                </div>
+
 
                 <!--Easy house 1-->
                 <div class="house unlocked" id="house1" onclick="startStory(1)">

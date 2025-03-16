@@ -105,6 +105,22 @@
     transition: transform 0.2s;
 }
 
+.locked {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.house.unlocked img {
+    filter: drop-shadow(0 0 5px gold);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { filter: drop-shadow(0 0 5px gold); }
+    50% { filter: drop-shadow(0 0 15px gold); }
+    100% { filter: drop-shadow(0 0 5px gold); }
+}
+
 .house:hover {
     transform: scale(1.1);
 }
@@ -151,8 +167,8 @@
       position: fixed;
       right: 0;
       top: 0;
-      background: rgba(255, 173, 173, 0.95);
-      border-left: 2px solid #ccc;
+      background: rgba(197, 245, 213, 0.95);
+      border-left: 1px solid #c3f8d009;
       padding: 20px;
       overflow-y: auto;
       z-index: 15;
@@ -160,7 +176,7 @@
 
 #leaderboard h2 {
     margin-bottom: 10px;
-    color: #c2185b;
+    color: #1d8d01;
 }
 
 #leaderboard ol {
@@ -193,19 +209,28 @@
         background-size: cover;
     }
 }
-    button {
-      padding: 10px 20px;
-      font-size: 14px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-    }
+                option {
+                    background-color: #FF6B6B;
+                    color: white;
+                    padding: 12px 20px;
+                    border: none;
+                    border-radius: 12px;
+                    margin: 10px 0;
+                    width: 80%; /* Adjust as needed */
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s, transform 0.1s;
+                }
 
-    button:hover {
-      background-color: #0056b3;
-    }
+                option:hover {
+                    background-color: #FF8787;
+                    transform: scale(1.05);
+                }
+
+                option:active {
+                    background-color: #FF4C4C;
+                    transform: scale(0.98);
+                }
                 .start-btn {
                     position: absolute;
                     bottom: 15%;
@@ -272,7 +297,20 @@
             animation: blink 1.5s infinite alternate;
             white-space: nowrap;
         }
+       
+        #question-content h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .mechanics {
     position: absolute;
     top: 55%;
@@ -485,6 +523,96 @@
             border-radius: 10px;
             font-size: 16px;
         }
+        #congratsPage {
+    background: url('Assets/congrats.webp') no-repeat center center/cover;
+    border-radius: 25px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    max-width: 900px;
+    width: 90%; /* Responsive width */
+    margin: 50px auto;
+    padding: 40px 20px;
+    color: #fff; /* Optional: if you have text */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Optional: Add animation effect */
+@keyframes popIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#congratsPage {
+    animation: popIn 0.6s ease-out;
+}
+
+/* Optional: If you want an overlay effect for better text visibility */
+#congratsPage::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3); /* Dark overlay */
+    border-radius: 25px;
+    z-index: 0;
+}
+
+#congratsPage * {
+    position: relative;
+    z-index: 1;
+}
+
+#congratsPage h1 {
+    color: #ff9800;
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+#congratsPage h2 {
+    color: #333;
+    margin-bottom: 30px;
+}
+
+#congratsPage button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#congratsPage button:hover {
+    background: #45a049;
+}
+#backButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+}
+
+#backButton:hover {
+    background-color: #45a049;
+}
     </style>
 </head>
 <body>
@@ -514,107 +642,108 @@
         <p>Reach the Final Stop! 🏆🔍 Uncover the big mystery!</p>
         <p>Let the adventure begin! 🚀🎉</p>
     </div>
-    <button class="start-btn" onclick="nextPage('map'); changeBackgroundForPage3();">Play</button>
+    <button class="start-btn" onclick="nextPage('map')">Play</button>
 </div>
 
 <!-- PAGE 3: Game Map -->
-<div id="map" class="container">
-    <div class="main-container">
+ <!-- Back Button -->
+ <div id="map" class="container">
+     <div class="main-container">
         <!-- Game Map -->
             <div class="map-container">
                 <!--Easy house 1-->
-                <div class="house" id="house1" onclick="startStory(1)">
+                <div class="house unlocked" id="house1" onclick="startStory(1)">
                     <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house locked" id="easyhouse1" onclick="startHouse(1)">
+                <div class="house locked" id="easyhouse1" onclick="if (!this.classList.contains('locked')) startQuestions(1,0)">
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="easyhouse2" onclick="startHouse(2)">
+                <div class="house locked" id="easyhouse2" onclick="if (!this.classList.contains('locked')) startQuestions(1,1)">
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="easyhouse3" onclick="startHouse(3)">
+                <div class="house locked" id="easyhouse3" onclick="if (!this.classList.contains('locked')) startQuestions(1,2)">
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="easyhouse4" onclick="startHouse(4)">
+                <div class="house locked" id="easyhouse4" onclick="if (!this.classList.contains('locked')) startQuestions(1,3)">
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="easyhouse5" onclick="startHouse(5)">
+                <div class="house locked" id="easyhouse5" onclick="if (!this.classList.contains('locked')) startQuestions(1,4)">
                     <img src="easyhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                 <!--Easy house 2-->
-                <div class="house" id="house2" onclick="startStory(2)">
+                <div class="house locked" id="house2" onclick="if (!this.classList.contains('locked')) startStory(2)">
                     <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="ehouse1" onclick="startHouse()">
+                <div class="house locked" id="ehouse1" onclick="if (!this.classList.contains('locked')) startQuestions(2,0)">
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="ehouse2" onclick="startHouse()">
+                <div class="house locked" id="ehouse2" onclick="if (!this.classList.contains('locked')) startQuestions(2,1)">
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="ehouse3" onclick="startHouse()">
+                <div class="house locked" id="ehouse3" onclick="if (!this.classList.contains('locked')) startQuestions(2,2)">
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="ehouse4" onclick="startHouse()">
+                <div class="house locked" id="ehouse4" onclick="if (!this.classList.contains('locked')) startQuestions(2,3)">
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="ehouse5" onclick="startHouse()">
+                <div class="house locked" id="ehouse5" onclick="if (!this.classList.contains('locked')) startQuestions(2,4)" >
                     <img src="easyhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
                  <!--Medium house 1-->
-                <div class="house" id="house3" onclick="startStory(3)">
+                <div class="house locked" id="house3" onclick="if (!this.classList.contains('locked')) startStory(3)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="medhouse1" onclick="startHouse(2)">
+                <div class="house locked" id="medhouse1" onclick="if (!this.classList.contains('locked')) startQuestions(3,0)">
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="medhouse2" onclick="startHouse(3)">
+                <div class="house locked" id="medhouse2" onclick="if (!this.classList.contains('locked')) startQuestions(3,1)">
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="medhouse3" onclick="startHouse(4)">
+                <div class="house locked" id="medhouse3" onclick="if (!this.classList.contains('locked')) startQuestions(3,2)">
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 60px; object-fit: cover;">
                 </div>
-                <div class="house" id="medhouse4" onclick="startHouse(5)">
+                <div class="house locked" id="medhouse4" onclick="if (!this.classList.contains('locked')) startQuestions(3,3)">
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="medhouse5" onclick="startHouse(6)">
+                <div class="house locked" id="medhouse5" onclick="if (!this.classList.contains('locked')) startQuestions(3,4)">
                 <img src="mediumhouse1.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div> 
                 <!--Medium house 2-->
-                <div class="house" id="house4" onclick="startStory(4)">
+                <div class="house locked" id="house4" onclick="if (!this.classList.contains('locked')) startStory(4)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="mediumhouse1" onclick="startHouse(2)">
+                <div class="house locked" id="mediumhouse1" onclick="if (!this.classList.contains('locked')) startQuestions(4,0)">
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="mediumhouse2" onclick="startHouse(3)">
+                <div class="house locked" id="mediumhouse2" onclick="if (!this.classList.contains('locked')) startQuestions(4,1)">
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="mediumhouse3" onclick="startHouse(4)">
+                <div class="house locked" id="mediumhouse3" onclick="if (!this.classList.contains('locked')) startQuestions(4,2)">
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="mediumhouse4" onclick="startHouse(5)">
+                <div class="house locked" id="mediumhouse4" onclick="if (!this.classList.contains('locked')) startQuestions(4,3)">
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="mediumhouse5" onclick="startHouse(6)">
+                <div class="house locked" id="mediumhouse5" onclick="if (!this.classList.contains('locked')) startQuestions(4,4)">
                 <img src="mediumhouse2.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>    
-                    <!--hard house-->
-                <div class="house" id="house5" onclick="startStory(5)">
+                <!--hard house-->
+                <div class="house locked" id="house5" onclick="if (!this.classList.contains('locked')) startStory(5)">
                 <img src="Storyhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="hardhouse1" onclick="startHouse(2)">
+                <div class="house locked" id="hardhouse1" onclick="if (!this.classList.contains('locked')) startQuestions(5,0)">
                 <img src="hardhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="hardhouse2" onclick="startHouse(3)">
+                <div class="house locked" id="hardhouse2" onclick="if (!this.classList.contains('locked')) startQuestions(5,1)">
                 <img src="hardhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="hardhouse3" onclick="startHouse(4)">
+                <div class="house locked" id="hardhouse3" onclick="if (!this.classList.contains('locked')) startQuestions(5,2)">
                 <img src="hardhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="hardhouse4" onclick="startHouse(5)">
+                <div class="house locked" id="hardhouse4" onclick="if (!this.classList.contains('locked')) startQuestions(5,3)">
                 <img src="hardhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
-                <div class="house" id="hardhouse5" onclick="startHouse(6)">
+                <div class="house locked" id="hardhouse5" onclick="if (!this.classList.contains('locked')) startQuestions(5,4)">
                 <img src="hardhouse.png" alt="StoryHouse 1" style="width: 50px; height: 70px; object-fit: cover;">
                 </div>
 
@@ -635,7 +764,7 @@
                 <li data-points="300">Player 3 - 300 pts</li>
             </ol>
         </div>
-        
+
     </div>
 </div>
 
@@ -656,8 +785,28 @@
       </div>
 </div>
 
+<!-- Congratulations Page -->
+<div id="congratsPage" style="display: none; text-align: center; padding: 20px;">
+    <h1>🎉 Congratulations! 🎉</h1>
+    <h2>You have completed all the stories and questions!</h2>
+    
+
+    <!-- Captured Image (User avatar or prize) -->
+    <div>
+        <img id="capturedImage" src="" alt="Captured Prize" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover;">
+    </div>
+
+    <!-- Party Popper GIF -->
+    <div style="margin: 20px;">
+        <img src="partypopper.gif" alt="Party Popper" style="width: 150px; height: auto;">
+    </div>
+
+    <!-- Button to Play Again or Go Back to Map -->
+    <button onclick="backToMap()" style="padding: 10px 20px; font-size: 16px;">Back to Map</button>
+</div>
     <script>
-function goBackToMap() {
+//#region Navigations
+    function goBackToMap() {
     // Hide all sections/pages first
     document.getElementById('map').style.display = 'block'; // Show map
     document.getElementById('story').style.display = 'none'; // Assuming story page has this ID
@@ -667,11 +816,15 @@ function goBackToMap() {
     document.getElementById('captured-image').style.display = 'block';
 
 }
-         function toggleMenu() {
+
+function toggleMenu() {
             let menu = document.getElementById("popupMenu");
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
+//#endregion
 
+
+//#region  Leaderboards and entry name
         let playerNameGlobal = "";
         let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || []; // Load leaderboard from localStorage
 
@@ -725,17 +878,6 @@ function removePlayerByName(nameToRemove) {
     // Refresh the leaderboard display
     updateLeaderboardUI();
 }
-
-function nextPage(pageId) {
-    // Hide all containers
-    const containers = document.querySelectorAll('.container');
-    containers.forEach(container => container.classList.remove('active'));
-
-    // Show selected page
-    document.getElementById(pageId).classList.add('active');
-}
-
-
 // Function to update the leaderboard UI
 function updateLeaderboardUI() {
     const leaderboardList = document.getElementById('leaderboard-list');
@@ -763,14 +905,25 @@ function sortLeaderboard() {
     players.forEach(player => leaderboardList.appendChild(player)); // Append sorted
 }
 window.onload = updateLeaderboardUI;
-
-
-
-function changeBackgroundForPage3() {
-    document.body.style.background = "white";
+function setPlayerName() {
+    const nameInput = document.getElementById("playerName");
+    playerNameGlobal = nameInput.value.trim() || "Player";
 }
-    
+//#endregion
 
+//#region  nextpage
+function nextPage(pageId) {
+    // Hide all containers
+    const containers = document.querySelectorAll('.container');
+    containers.forEach(container => container.classList.remove('active'));
+
+    // Show selected page
+    document.getElementById(pageId).classList.add('active');
+}
+
+//#endregion
+
+//#region Camera
     const video = document.getElementById('camera');
     const cameraOverlay = document.getElementById('camera-overlay');
     let stream;
@@ -818,115 +971,241 @@ function changeBackgroundForPage3() {
     // alert("Face ID captured successfully!"); 
     }
 
+//#endregion
+       
 
-        function nextPage(page) {
-            document.querySelectorAll('.container').forEach(div => div.classList.remove('active'));
-            document.getElementById(page).classList.add('active');
-        }
+//#region  Map and Questions
 
+function startStory(storyNumber) {
+    const storyContainer = document.getElementById("story-content"); // Correct ID
 
-    let currentQuestionIndex = 0;
-    let unlockedHouses = 1;
-    let questions = []; // This will hold current story's questions
-
-    function startStory(storyNumber) {
-    if (storyNumber > unlockedHouses) {
-        alert('This house is locked! Complete the previous house first.');
+    if (!storyContainer) {
+        console.error("story-content div not found.");
         return;
     }
-    currentStory = storyNumber;
-    currentQuestionIndex = 0;
+    if (!stories[storyNumber]) {
+        console.error("Story not found for index:", storyNumber);
+        return;
+    }
 
-    // Show the entire story container (PAGE 4)
+    // Display the story content
+    storyContainer.innerHTML = stories[storyNumber];
+    storyContainer.style.display = 'block';
+
+    // Show story section
     document.getElementById('story').style.display = 'block';
 
-    // Inject story content inside the designated container
-    document.getElementById('story-content').innerHTML = stories[storyNumber];
-    document.getElementById('story-content').style.display = 'block';
-
-    // Hide question content initially
+    // Hide other sections
     document.getElementById('question-content').style.display = 'none';
-        // Hide other components like captured image and leaderboard
-        document.getElementById('captured-image-wrapper').style.display = 'none';
+    document.getElementById('captured-image-wrapper').style.display = 'none';
     document.getElementById('leaderboard').style.display = 'none';
-}
 
-
-    function startHouse(house) {
-        let houseElement = document.getElementById(`house${house}`);
-        if (houseElement.classList.contains('locked')) {
-            alert('This house is locked! Answer more questions to unlock it.');
-        } else {
-            alert(`Welcome to House ${house}!`);
-        }
+    // Unlock next house when story 1 is viewed (for example)
+    if (storyNumber === 1) {
+        unlockHouse('easyhouse1'); // Unlock easyhouse1 after reading story 1
     }
-    let currentStoryIndex = 1; // Initial story
-
-    function startQuestions(storyIndex) {
-    currentStoryIndex = storyIndex;
-    currentQuestionIndex = 0;
-    questions = AllQuestions[storyIndex]; // Load questions for this story
-    askQuestion(); // Start asking questions
 }
 
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let currentHouse = 1; // Start at House 1
+let currentStory = 0;
+let currentQuestionNumber = 0;
+let completedQuestions = {}; // Example: { '1_0': true, '2_3': true } means story 1 question 0, story 2 question 3 done
 
-function askQuestion() {
+let questionsAnsweredInCurrentStory = 0;
 
-    let qContainer = document.getElementById('question-content');
-    qContainer.style.display = 'block'; // <-- Make it visible!
-    document.getElementById('story-content').style.display = 'none';
-    let qData = questions[currentQuestionIndex];
-    let optionsHtml = qData.options.map((opt, index) => `
-        <button onclick="checkAnswer(${index})">${opt}</button>
-    `).join('');
 
-    qContainer.innerHTML = `
-        <p>${qData.q}</p>
+function startQuestions(storyNumber, questionNumber) {
+    currentStory = storyNumber;
+    currentQuestionNumber = questionNumber;
+
+    const questionData = AllQuestions[storyNumber][questionNumber]; // Single question for that house
+    let questionContainer = document.getElementById("question-content");
+
+    let optionsHtml = "";
+    questionData.options.forEach((opt, idx) => {
+        optionsHtml += `<button onclick="checkAnswer(${idx})">${opt}</button><br>`;
+    });
+
+    questionContainer.innerHTML = `
+        <h3>${questionData.q}</h3>
         ${optionsHtml}
     `;
+    questionContainer.classList.add('fade-in');
+
+    // Show question, hide others
+    document.getElementById('story').style.display = 'block';
+    document.getElementById('story-content').style.display = 'none';
+    document.getElementById('captured-image-wrapper').style.display = 'none';
+    document.getElementById('leaderboard').style.display = 'none';
+    questionContainer.style.display = 'block';
 }
-
-
-
 function checkAnswer(selectedIndex) {
-    let correctAnswer = questions[currentQuestionIndex].correct;
+    const questionData = AllQuestions[currentStory][currentQuestionNumber]; // Current question
+    const questionKey = currentStory + '_' + currentQuestionNumber; // Unique key for question
 
-    if (selectedIndex === correctAnswer) {
-        alert('Correct! +2 points awarded.');
-        addPoints(2); // Award points
-    } else {
-        alert('Wrong answer!');
-    }
-
-    currentQuestionIndex++;
-    askQuestion(); // Load next question or move to the next story
-}
-function loadStory(storyIndex) {
-    let storyContainer = document.getElementById('story-content');
-    storyContainer.innerHTML = stories[storyIndex];
-}
-function addPoints(points) {
-    let player = leaderboard.find(p => p.name === playerNameGlobal);
-    if (player) {
-        player.points += points; // Add points
-    } else {
-        leaderboard.push({ name: playerNameGlobal, points: points }); // If somehow missing
-    }
-
-    leaderboard.sort((a, b) => b.points - a.points); // Sort leaderboard
-    updateLeaderboardUI(); // Refresh display
-}
-
-
-    function unlockNextHouse() {
-        unlockedHouses++;
-        let houseToUnlock = document.getElementById(`house${unlockedHouses}`);
-        if (houseToUnlock) {
-            houseToUnlock.classList.remove('locked');
-            houseToUnlock.classList.add('unlocked');
-            alert(`House ${unlockedHouses} is now unlocked!`);
+    if (selectedIndex === questionData.correct) {
+        // ✅ Check if question already completed
+        if (completedQuestions[questionKey]) {
+            alert("Correct! (Already completed, no points awarded)");
+        } else {
+            alert("Correct!");
+            addPointsForCorrectAnswer(); // Only give points if first time
+            completedQuestions[questionKey] = true; // Mark as completed
         }
+
+        let nextQuestionNumber = currentQuestionNumber + 1;
+
+        // ✅ Proper house prefix determination
+        let housePrefix = (currentStory === 1) ? 'easyhouse' :
+                          (currentStory === 2) ? 'ehouse' :
+                          (currentStory === 3) ? 'medhouse' :
+                          (currentStory === 4) ? 'mediumhouse' :
+                          (currentStory === 5) ? 'hardhouse' :
+                          'house';
+
+        let nextHouseId = housePrefix + (nextQuestionNumber + 1); // House number starts at 1
+
+        // Total number of stories (for final check)
+        const totalStories = Object.keys(AllQuestions).length;
+
+        // ✅ Check if there are more questions in the current story
+        if (nextQuestionNumber < AllQuestions[currentStory].length) {
+            // Unlock next house (next question)
+            let nextHouse = document.getElementById(nextHouseId);
+            if (nextHouse && nextHouse.classList.contains('locked')) {
+                nextHouse.classList.remove('locked');
+                nextHouse.classList.add('unlocked');
+                console.log('Unlocked house:', nextHouseId);
+            }
+            backToMap(); // Return to map
+        } else {
+            // ✅ Finished all questions in this story
+            let nextCategoryHouse = document.getElementById('house' + (currentStory + 1));
+            const isLastStory = currentStory === totalStories;
+
+            if (isLastStory) {
+                console.log("All stories and questions completed!");
+                backToMap(); // Go back to map first
+
+                // Show congrats page after 2 seconds
+                setTimeout(() => {
+                    showCongratsPage(); // Congrats page without image argument
+                }, 2000); // Adjust delay as needed
+            } else if (nextCategoryHouse && nextCategoryHouse.classList.contains('locked')) {
+                // Unlock next story house if available
+                nextCategoryHouse.classList.remove('locked');
+                nextCategoryHouse.classList.add('unlocked');
+                alert("Congratulations! You've unlocked the next story!");
+                backToMap(); // Return to map
+            } else {
+                // Story already unlocked, return to map
+                backToMap();
+            }
+        }
+
+    } else {
+        // ❌ Wrong answer flow
+        alert("Wrong! Try again.");
+        backToMap(); // Return to map even if wrong
     }
+
+   
+}
+
+
+
+
+// ✅ Save progress
+localStorage.setItem('completedQuestions', JSON.stringify(completedQuestions));
+
+// Load progress on page load
+let savedCompleted = localStorage.getItem('completedQuestions');
+completedQuestions = savedCompleted ? JSON.parse(savedCompleted) : {};
+
+
+function unlockFirstHouseInStory(storyNumber) {
+    let firstHouseId = '';
+
+    // Determine which house to unlock based on story number
+    if (storyNumber === 1) {
+        firstHouseId = 'easyhouse1'; // First story questions
+    } else if (storyNumber === 2) {
+        firstHouseId = 'ehouse1'; // Second story questions
+    }
+    else if (storyNumber === 3)
+    {
+        firstHouseId = 'medhouse1';
+    }
+    else if (storyNumber === 4)
+    {
+        firstHouseId = 'mediumhouse1';
+    }
+    else if (storyNumber === 5)
+    {
+        firstHouseId = 'hardhouse1';
+    }
+
+    // Unlock the house if found
+    let firstHouse = document.getElementById(firstHouseId);
+    if (firstHouse) {
+        firstHouse.classList.remove('locked');
+        firstHouse.classList.add('unlocked');
+        console.log(`${firstHouseId} unlocked!`);
+    } else {
+        console.error(`House with ID ${firstHouseId} not found.`);
+    }
+
+    // Return to map
+    backToMap();
+}
+
+
+
+
+function backToMap() {
+    // Show only map
+    document.getElementById('story').style.display = 'none';
+    document.getElementById('question-content').style.display = 'none';
+    document.getElementById('captured-image-wrapper').style.display = 'block';
+    document.getElementById('leaderboard').style.display = 'block';
+    document.getElementById('map').style.display = 'block'; // Assuming this is your map container
+}
+
+
+function unlockNextHouse() {
+    let housePrefix = currentStory === 1 ? 'easyhouse' : 'ehouse'; // Decide house prefix based on story
+    let nextHouseNumber = currentQuestionNumber + 1; // Next house number (since question numbers are zero-based)
+    let nextHouseElement = document.getElementById(housePrefix + nextHouseNumber); // e.g., easyhouse2 or ehouse2
+
+    if (nextHouseElement) {
+        nextHouseElement.classList.remove('locked');
+        nextHouseElement.classList.add('unlocked');
+        console.log(housePrefix + nextHouseNumber + " unlocked!");
+
+        // Set click event dynamically if not set already
+        if (!nextHouseElement.getAttribute('onclick')) {
+            nextHouseElement.setAttribute('onclick', 'startQuestions(' + currentStory + ',' + (nextHouseNumber - 1) + ')'); // -1 to match zero-based index
+        }
+    } else {
+        console.log("Next house not found: " + housePrefix + nextHouseNumber);
+    }
+}
+
+
+function unlockHouse(houseId) {
+    const house = document.getElementById(houseId);
+    if (house) {
+        house.classList.remove('locked');
+        house.classList.add('unlocked');
+    } else {
+        console.error('House with ID ' + houseId + ' not found.');
+    }
+}
+
+
 
 // Story data
 let stories = {
@@ -934,7 +1213,7 @@ let stories = {
         <p>Elena loved the forest behind her house. Every afternoon, she walked along the narrow path, enjoying the cool breeze and the fresh scent of pine. The tall trees formed a green roof above her, shading her from the sun. She listened to the rustling leaves and the chirping birds, feeling calm and happy.</p>
         <p>After the rain, the forest looked even more magical. Tiny water droplets sparkled on the leaves, and the small stream flowed faster, carrying twigs downstream. Elena sat on a large tree root, closing her eyes as she listened to the gentle sounds of nature. She always felt peaceful there.</p>
         <p>As the sun began to set, she smiled, knowing she would return again tomorrow to her favorite place.</p>
-        <button onclick="startQuestions(1)">Start Questions</button>`,
+        <button onclick="backToMap()">Unlock Next House</button>`,
 
     2: `<h2>The Brave Little Squirrel</h2>
         <p>Once upon a time, in a lush, green forest, there lived a little squirrel named Sammy. Sammy wasn’t the biggest or the fastest squirrel, but he had something special—courage. One bright morning, a terrible storm cloud appeared, darkening the sky and sending a chilly wind across the forest. All the animals scurried to their homes, afraid of the heavy rain and loud thunder.</p>
@@ -942,68 +1221,75 @@ let stories = {
         <p>Without thinking twice, Sammy climbed the tree, holding onto the branches like a rock climber gripping the cliffside. He carefully gathered the baby birds, one by one, and carried them safely to a lower, stronger branch. As the storm raged on, Sammy kept watch over the little birds, making sure they were safe.</p>
         <p>When the storm finally passed and the sun came out, the other animals came out of their shelters. They looked at Sammy with wide eyes. "How did you do it?" asked a curious rabbit. Sammy smiled and replied, "It’s not about being the biggest or the fastest; it’s about having the courage to do what’s right, even when it’s hard."</p>
         <p>From that day on, Sammy became a hero in the forest. All the animals learned that bravery isn't about size or strength—it's about having the heart to help others, no matter the challenge.</p>
-        <button onclick="startQuestions(2)">Start Questions</button>`,
+        <button onclick="unlockFirstHouseInStory(2)">Unlock Next House</button>`,
 
     3: `<h2>The Mysterious Stranger</h2>
         <p>One cold, windy evening in the quiet village of Ravenswood, 12-year-old Emma spotted a mysterious person walking down the cobblestone road. The stranger wore a long cloak and carried a glowing lantern, which made Emma very curious since visitors hardly ever came to her village. She decided to follow them and watched as they entered the spooky, abandoned inn at the edge of town. Gathering all her courage, Emma peeked inside and saw the stranger looking at an old map. When they noticed her, the stranger introduced themselves as Elias and explained they were searching for something special—a magical gem called the Starstone that had been lost long ago.</p>
         <p>Excited to be part of an adventure, Emma offered to help. Together, they searched every corner of the dusty inn until Emma spotted a strange stone in the fireplace with odd markings on it. With Elias’s help, they pulled the stone loose and found a hidden compartment holding a glowing blue gem—the Starstone! Elias smiled and thanked Emma for being so brave and clever. They promised to keep the gem safe from harm and gave her a shiny silver coin as a gift to remember their adventure. As the sun rose over Ravenswood, Elias disappeared down the road, leaving Emma with a wonderful story to tell and the memory of an exciting night she would never forget.</p>
-        <button onclick="startQuestions(3)">Start Questions</button>`,
+        <button onclick="unlockFirstHouseInStory(3)">Unlock Next House</button>`,
 
     4: `<h2>The Mystery of the Missing Trophy</h2>
         <p>The annual school quiz bee had just ended, and Mr. Cruz proudly held up the gleaming gold trophy. "This will stay in the display case for everyone to see," he announced. The students cheered, especially Ben, Mia, and Carlo, who were the top three finalists. After the event, the three students stayed behind for different reasons. Ben returned to the room to get his forgotten notebook, Mia searched for her lost bracelet, and Carlo was tasked with cleaning up the quiz materials. Everything seemed normal until the next morning when the principal discovered that the trophy was missing. With no signs of a break-in, suspicion fell on the last three students seen near the display case. The principal called them to her office to help solve the mystery.</p>
         <p>During the investigation, strange clues began to surface. Mia noticed a smear of shiny gold paint on a desk near the door. Carlo remembered hearing a loud clink as he left the room, but he didn’t think much of it at the time. Meanwhile, Ben, known for being forgetful, couldn’t recall if he locked the door after retrieving his notebook. The principal carefully questioned each student, trying to piece together the truth. Who could have taken the trophy, and why? With the clock ticking, it was up to the principal to use the clues and find the missing prize before the school day ended.</p>
-        <button onclick="startQuestions(4)">Start Questions</button>`,
+        <button onclick="unlockFirstHouseInStory(4)">Unlock Next House</button>`,
 
     5: `<h2>The Broken Bracelet</h2>
         <p>Ella and Mia had been best friends since first grade. They did everything together eating lunch, working on projects, and playing after school. One day, Ella gave Mia a beautiful friendship bracelet with their initials on it. "This means we'll always be friends," Ella said with a smile. Mia promised to wear it every day. But a week later, during recess, Ella noticed Mia wasn’t wearing the bracelet. When she asked about it, Mia looked nervous and said, "I lost it... I’m really sorry." Ella felt hurt and wondered if their friendship still mattered to Mia.</p>
         <p>The next day, Ella stopped talking to Mia, thinking her friend didn’t care anymore. Mia felt sad but didn’t know how to fix things. After school, while cleaning her backpack, Mia found the bracelet tucked inside a hidden pocket. She ran to Ella’s house and held it up. "I found it! I never stopped caring—I was just scared you'd be mad," Mia said. Ella smiled and hugged her. "I’m sorry for getting upset. Our friendship is more important than a bracelet," she said. From that day on, they learned that honest communication and understanding could make their friendship even stronger.</p>
-        <button onclick="startQuestions(5)">Start Questions</button>`
+        <button onclick="unlockFirstHouseInStory(5)">Unlock Next House</button>`
 };
 
 let AllQuestions = {
     1: [ // Elena's Favorite Place
-        { q: "Where did Elena like to go every afternoon?", options: ["The park", "The forest", "The river"], correct: 1 },
-        { q: "What formed a green roof above her?", options: ["Tall trees", "Clouds", "Mountains"], correct: 0 },
-        { q: "What did Elena sit on in the forest?", options: ["A rock", "A tree root", "A bench"], correct: 1 },
-        { q: "When did the forest look magical to Elena?", options: ["After the rain", "At night", "In the morning"], correct: 0 },
-        { q: "How did Elena feel in the forest?", options: ["Lonely", "Peaceful", "Scared"], correct: 1 }
+        { q: "Why did Elena enjoy going to the forest every afternoon?", options: ["She was looking for lost items.", "She wanted to collect leaves.", "She was waiting for someone.","She loved the fresh air and peaceful surroundings."], correct: 3 },
+        { q: "Why did the forest look more magical after the rain?", options: ["The trees changed color.", "The raindrops on the leaves sparkled in the sunlight.", "The animals came out to play","The ground became dry."], correct: 1 },
+        { q: "Why did Elena feel peaceful when she sat under the tree?", options: ["She enjoyed the sounds of nature.", "She liked watching animals run around.", "She was reading a book.","She was waiting for the rain to stop."], correct: 0 },
+        { q: "What did Elena do as the sun began to set?", options: ["She ran home quickly.", "She picked flowers to take home.", "She smiled, knowing she would return.","She climbed a tree to watch the sunset."], correct: 2 },
+        { q: "What type of text is this based on its purpose?", options: ["Descriptive – because it describes a place in detail.", "Expository – because it explains something.", "Narrative – because it tells a story.","Persuasive – because it convinces the reader of something."], correct: 0 }
     ],
     2: [ // The Brave Little Squirrel
-        { q: "What was the little squirrel's name?", options: ["Sammy", "Benny", "Tommy"], correct: 0 },
-        { q: "Why were the baby birds in danger?", options: ["They were hungry", "The nest was shaking in the storm", "A fox was nearby"], correct: 1 },
-        { q: "What did Sammy do to help the birds?", options: ["Fed them", "Carried them to a safer branch", "Built a new nest"], correct: 1 },
-        { q: "What made Sammy special?", options: ["He was the fastest", "He was very brave", "He could fly"], correct: 1 },
-        { q: "What did the other animals think of Sammy after the storm?", options: ["They ignored him", "He became a hero", "They laughed at him"], correct: 1 }
+        { q: "What made Sammy different from the other squirrels?", options: ["He was the fastest", "He was the biggest", "He was brave","He was the oldest"], correct: 2 },
+        { q: "Why did Sammy decide to help the baby birds? ", options: ["He wanted to be a hero", "He was afraid of the storm", "He thought it would be fun","He had the courage to help, even in danger"], correct: 3 },
+        { q: "What did Sammy carry the baby birds to?", options: ["A safe treehouse", "A lower, stronger branch", "A nearby cave","His own home"], correct: 1 },
+        { q: "What lesson did the other animals learn from Sammy? ", options: ["Strength is the most important quality", "You should hide during a storm", "Bravery comes from having the heart to help","It’s best to avoid danger"], correct: 2 },
+        { q: "What does Sammy’s story teach us?", options: ["To always hide from danger", "That being small means you can't help", "Courage and helping others are more important than size","To be afraid of storms"], correct: 2 }
     ],
     3: [ // The Mysterious Stranger
-        { q: "Who was the mysterious person Emma followed?", options: ["Elias", "Ethan", "Edward"], correct: 0 },
-        { q: "What was the stranger carrying?", options: ["A glowing lantern", "A sword", "A book"], correct: 0 },
-        { q: "What magical item were they searching for?", options: ["A golden ring", "A silver sword", "The Starstone"], correct: 2 },
-        { q: "Where did they find the Starstone?", options: ["Under a table", "In the fireplace", "Behind a door"], correct: 1 },
-        { q: "What did Elias give Emma as a gift?", options: ["A necklace", "A silver coin", "A magic wand"], correct: 1 }
+        { q: "How did Emma react when she saw the mysterious stranger?", options: ["She ran away in fear.", "She ignored them and went home.", "She became curious and decided to follow the stranger.","She told her parents about the stranger."], correct: 2 },
+        { q: "How did Emma show bravery during her adventure?", options: ["By sneaking out of her house at night.", "By confronting the stranger when she saw them.", "By helping Elias search for the Starstone in a spooky inn.","By telling everyone in the village about her adventure."], correct: 2 },
+        { q: "How does the setting of Ravenswood contribute to the adventure?", options: ["The setting has no impact on the adventure.", "The sunny weather makes it a pleasant place to visit.", "The quiet village with a spooky, abandoned inn creates an intriguing and unfamiliar environment, essential for drawing the protagonist into the adventure.","The friendly villagers offer helpful advice."], correct: 2 },
+        { q: "Which of these actions directly led to the discovery of the Starstone?", options: ["Elias enters the spooky inn.", "Emma follows the stranger.", "Emma spotted the stone with odd markings.","Elias introduces himself to Emma."], correct: 2 },
+        { q: "What lesson do you think Emma learned from her experience with Elias?", options: ["That even small acts of bravery can lead to big adventures.", "That it’s always safe to follow strangers into unknown places.", "That treasure is more important than friendship or kindness.","That staying at home is better than exploring new things."], correct: 0 }
     ],
     4: [ // The Mystery of the Missing Trophy
-        { q: "Who discovered the trophy was missing?", options: ["The teacher", "The principal", "The janitor"], correct: 1 },
-        { q: "Who were the last three students seen near the trophy?", options: ["Ben, Mia, Carlo", "Ben, Anna, Carlo", "Mia, Carlo, Sam"], correct: 0 },
-        { q: "What clue did Mia find?", options: ["A broken window", "Gold paint on a desk", "A note"], correct: 1 },
-        { q: "What did Carlo hear as he left the room?", options: ["Footsteps", "A loud clink", "Voices"], correct: 1 },
-        { q: "Why was Ben suspicious?", options: ["He was always near the trophy", "He forgot if he locked the door", "He saw someone take it"], correct: 1 }
+        { q: "If you were the principal, what would be the best first question to ask the three students?", options: ["What is your favorite subject?", "Why were you near the trophy?", "Did you win a prize in the quiz bee?","What time did you arrive at school?"], correct: 1 },
+        { q: "Imagine you were Ben—how would you prove that you didn’t take the trophy??", options: ["Show your notebook to prove you forgot it.", "Say you were too busy to steal it.", "Blame Mia or Carlo instead.","Avoid answering any questions."], correct: 0 },
+        { q: "If you found the trophy hidden in a locker, what should you do next?", options: ["Put it back in the display case quietly.", "Keep it to teach the thief a lesson.", "Tell the principal immediately.","Hide it somewhere else."], correct: 2 },
+        { q: "What might be a possible reason someone took the trophy?", options: ["They wanted to keep it for themselves.", "They were jealous of the winners.", "They wanted to play a prank.","All of the above."], correct: 3 },
+        { q: "If you were a detective, which clue would you investigate first?", options: ["The gold paint on the desk.", "The loud clink sound Carlo heard.", "Ben’s forgetfulness.","The display case lock."], correct: 0 }
     ],
     5: [ // The Broken Bracelet
-        { q: "What did Ella give Mia?", options: ["A necklace", "A friendship bracelet", "A book"], correct: 1 },
-        { q: "Why was Ella upset with Mia?", options: ["Mia lost the bracelet", "Mia didn’t talk to her", "Mia broke her toy"], correct: 0 },
-        { q: "Where did Mia find the bracelet?", options: ["In her backpack", "Under her bed", "At school"], correct: 0 },
-        { q: "What did Mia do after finding the bracelet?", options: ["Kept it", "Returned it to Ella", "Threw it away"], correct: 1 },
-        { q: "What did they learn about friendship?", options: ["It's about gifts", "It needs trust and communication", "It's only for fun"], correct: 1 }
+        { q: "If you were Ella, how would you feel when Mia lost the bracelet?", options: ["Angry and unwilling to forgive.", "Hurt but willing to talk about it.", "Excited because you wanted a new bracelet.","Happy because it wasn’t important."], correct: 1 },
+        { q: "If you were Mia, what could you have done when you lost the bracelet?", options: ["Ignore it and pretend nothing happened.", "Tell Ella the truth immediately.", "Blame someone else for losing it","Buy a new bracelet in secret."], correct: 1 },
+        { q: "What lesson did Ella and Mia learn from this situation?", options: ["Friendship is only about gifts.", "It’s okay to keep secrets from friends.", "Talking openly helps solve problems.","Friends should never make mistakes."], correct: 2 },
+        { q: "If you lost something important that a friend gave you, what is the best thing to do?", options: ["Keep it a secret and hope they don’t notice.", "Tell your friend and apologize.", "Replace it without telling them.","Stop talking to your friend."], correct: 1 },
+        { q: "Why is communication important in a friendship?", options: ["It helps avoid misunderstandings.", "It allows you to gossip about others.", "It makes your friendship more popular.","It means you never have to apologize."], correct: 0 }
     ]
 };
 
+//#endregion
+function showCongratsPage() {
+    console.log("Congrats page triggered!"); // Debugging
 
-function setPlayerName() {
-    const nameInput = document.getElementById("playerName");
-    playerNameGlobal = nameInput.value.trim() || "Player";
+    // Hide all other content
+    document.getElementById('storyContainer').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('mapContainer').style.display = 'none';
+
+    // Show congrats page
+    document.getElementById('congratsPage').style.display = 'block';
+    
 }
-  
-    </script>
+</script>
 </body>
 </html>

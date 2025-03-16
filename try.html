@@ -2,131 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Story and Houses Game</title>
+    <title>Story Game with Leaderboard</title>
     <style>
-        .house {
-            display: inline-block;
-            padding: 20px;
-            margin: 10px;
-            border: 2px solid black;
-            cursor: pointer;
-            border-radius: 10px;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 30px auto;
             text-align: center;
-            width: 100px;
         }
-        .locked {
-            background-color: gray;
+        #leaderboard p {
+            margin: 5px 0;
+            font-weight: bold;
         }
-        .unlocked {
-            background-color: lightgreen;
+        #question-content button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
         }
-        #story-content, #question-content {
-            margin-top: 20px;
-            display: none;
+        input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            margin-bottom: 10px;
         }
         button {
-            display: block;
-            margin: 10px 0;
+            padding: 10px 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<h1>Story and Houses Game</h1>
+<h1>Story Game with Leaderboard</h1>
 
-<!-- Story House -->
-<div id="story-house" class="house unlocked" onclick="startStory()">
-    Story House
-</div>
+<h2>Enter Player Name:</h2>
+<input type="text" id="playerName" placeholder="Your Name">
+<br>
+<button onclick="startGame()">Start Game</button>
 
-<!-- Question Houses -->
-<div id="house1" class="house locked" onclick="startHouse(1)">House 1</div>
-<div id="house2" class="house locked" onclick="startHouse(2)">House 2</div>
-<div id="house3" class="house locked" onclick="startHouse(3)">House 3</div>
-<div id="house4" class="house locked" onclick="startHouse(4)">House 4</div>
-<div id="house5" class="house locked" onclick="startHouse(5)">House 5</div>
+<h2>Leaderboard</h2>
+<div id="leaderboard"></div>
 
-<!-- Story Content -->
-<div id="story-content">
-    <h2>Elena's Favorite Place</h2>
-    <p>Elena loved the forest behind her house. Every afternoon, she walked along the narrow path, enjoying the cool breeze and the fresh scent of pine...</p>
-    <button onclick="startQuestions()">Start Questions</button>
-</div>
-
-<!-- Questions Content -->
-<div id="question-content"></div>
+<!-- Game Content -->
+<div id="question-content" style="display: none;"></div>
 
 <script>
+    let currentStoryIndex = 0;
     let currentQuestionIndex = 0;
-    let unlockedHouses = 0;
+    let questions = [];
+    let score = 0;
+    let playerName = "";
 
-    let questions = [
-        { q: "Why did Elena enjoy the forest?", options: ["The tall trees", "The narrow path", "The cool breeze"], correct: 2 },
-        { q: "What sound did she enjoy?", options: ["Rustling leaves", "Animal noises", "People talking"], correct: 0 },
-        { q: "Where did Elena sit?", options: ["A rock", "A tree root", "A wooden bench"], correct: 1 },
-        { q: "When did the forest look magical?", options: ["At sunrise", "After rain", "During summer"], correct: 1 },
-        { q: "How did Elena feel in the forest?", options: ["Bored", "Scared", "Peaceful"], correct: 2 }
+    // Example questions for stories
+    const AllQuestions = [
+        [ // Story 1 Questions
+            { q: "What is 2 + 2?", options: ["3", "4", "5"], answer: 1 },
+            { q: "What is the capital of France?", options: ["Paris", "London", "Berlin"], answer: 0 }
+        ],
+        [ // Story 2 Questions
+            { q: "What color is the sky?", options: ["Blue", "Green", "Red"], answer: 0 },
+            { q: "How many days in a week?", options: ["5", "7", "10"], answer: 1 }
+        ]
     ];
 
-    function startStory() {
-        document.getElementById('story-content').style.display = 'block';
+    // Start Game
+    function startGame() {
+        playerName = document.getElementById('playerName').value.trim();
+        if (playerName === "") {
+            alert("Please enter your name to play.");
+            return;
+        }
+        startQuestions(0); // Start with first story
+    }
+
+    // Start questions
+    function startQuestions(storyIndex) {
+        currentStoryIndex = storyIndex;
+        currentQuestionIndex = 0;
+        score = 0; // Reset score
+        questions = AllQuestions[storyIndex]; // Load questions for the story
+        askQuestion(); // Start asking
+    }
+
+    // Ask question
+    function askQuestion() {
+        let qContainer = document.getElementById('question-content');
+        qContainer.style.display = 'block'; // Make sure it's visible
+
+        if (currentQuestionIndex >= questions.length) {
+            endGame(); // All questions done
+            return;
+        }
+
+        let qData = questions[currentQuestionIndex]; // Current question data
+
+        let optionsHtml = qData.options.map((opt, index) => `
+            <button onclick="checkAnswer(${index})">${opt}</button>
+        `).join('');
+
+        qContainer.innerHTML = `
+            <h3>Question ${currentQuestionIndex + 1} of ${questions.length}</h3>
+            <p>${qData.q}</p>
+            ${optionsHtml}
+        `;
+    }
+
+    // Check answer
+    function checkAnswer(selectedIndex) {
+        if (questions[currentQuestionIndex].answer === selectedIndex) {
+            score++; // Correct answer
+        }
+        currentQuestionIndex++; // Move to next question
+        askQuestion(); // Continue asking
+    }
+
+    // End game and show score
+    function endGame() {
+        alert(`Game over, ${playerName}! Your score: ${score}`);
+
+        // Save and show leaderboard
+        saveToLeaderboard(playerName, score);
+        displayLeaderboard();
+
+        // Hide question content
         document.getElementById('question-content').style.display = 'none';
     }
 
-    function startHouse(house) {
-        let houseElement = document.getElementById(`house${house}`);
-        if (houseElement.classList.contains('locked')) {
-            alert('This house is locked! Answer more questions to unlock it.');
-        } else {
-            alert(`Welcome to House ${house}!`);
-        }
+    // Save to leaderboard
+    function saveToLeaderboard(name, score) {
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        leaderboard.push({ name, score });
+        leaderboard.sort((a, b) => b.score - a.score); // High to low
+        leaderboard = leaderboard.slice(0, 5); // Keep top 5 scores
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard)); // Save back
     }
 
-    function startQuestions() {
-        document.getElementById('story-content').style.display = 'none';
-        document.getElementById('question-content').style.display = 'block';
-        currentQuestionIndex = 0;
-        unlockedHouses = 0;
-        askQuestion();
+    // Display leaderboard
+    function displayLeaderboard() {
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        let html = leaderboard.map((entry, idx) => `<p>${idx + 1}. ${entry.name}: ${entry.score}</p>`).join('');
+        document.getElementById('leaderboard').innerHTML = html;
     }
 
-    function askQuestion() {
-        let qContainer = document.getElementById('question-content');
-        if (currentQuestionIndex < questions.length) {
-            let qData = questions[currentQuestionIndex];
-            let html = `<h3>${qData.q}</h3>`;
-            qData.options.forEach((opt, index) => {
-                html += `<button onclick="checkAnswer(${index})">${opt}</button>`;
-            });
-            qContainer.innerHTML = html;
-        }
-    }
+    // Show leaderboard when page loads
+    window.onload = displayLeaderboard;
 
-    function checkAnswer(selected) {
-        let correctAnswer = questions[currentQuestionIndex].correct;
-        if (selected === correctAnswer) {
-            alert("Correct! Well done!");
-            unlockNextHouse();
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                askQuestion(); // Move to next question
-            } else {
-                document.getElementById('question-content').innerHTML = `<h3>All questions completed! All houses are now unlocked!</h3>`;
-            }
-        } else {
-            alert("Wrong answer. Try again!"); // Stay on same question
-        }
-    }
-
-    function unlockNextHouse() {
-        unlockedHouses++;
-        let houseToUnlock = document.getElementById(`house${unlockedHouses}`);
-        if (houseToUnlock) {
-            houseToUnlock.classList.remove('locked');
-            houseToUnlock.classList.add('unlocked');
-            alert(`House ${unlockedHouses} is now unlocked!`);
-        }
-    }
 </script>
 
 </body>
